@@ -74,7 +74,6 @@ public class AnnouncementService extends IntentService {
                 dataItems = call.execute().body();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.i(TAG, "onHandleIntent: " + e.getMessage());
                 return;
             }
 

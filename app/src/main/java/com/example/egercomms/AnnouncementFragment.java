@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.egercomms.data.DataHandler;
+import com.example.egercomms.eventObjects.AnnouncementEventObject;
 import com.example.egercomms.models.Announcement;
 
 import org.greenrobot.eventbus.EventBus;
@@ -85,7 +86,6 @@ public class AnnouncementFragment extends Fragment {
             }
             adapter = new MyAnnouncementRecyclerViewAdapter(announcements, mListener);
             recyclerView.setAdapter(adapter);
-            Log.e("Frag", "onCreateViewA: "+ dataHandler.getAnnouncements());
         }
         return view;
     }
@@ -130,14 +130,14 @@ public class AnnouncementFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshAdapter(List<Announcement> announcements){
-        Log.e("REFRESH", "refreshAdapter: Announcement");
+    public void refreshAnnouncementsAdapter(AnnouncementEventObject announcementEventObject){
+        List<Announcement> announcements = announcementEventObject.getAnnouncements();
         //save state
-        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
-
+//        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
+        this.announcements = announcements;
         recyclerView.setAdapter(new MyAnnouncementRecyclerViewAdapter(announcements, mListener));
 
         //restore state
-        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+//        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
     }
 }

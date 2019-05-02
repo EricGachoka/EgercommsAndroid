@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.egercomms.data.DataHandler;
+import com.example.egercomms.eventObjects.JurisdictionEventObject;
 import com.example.egercomms.models.Announcement;
 import com.example.egercomms.models.Jurisdiction;
 import com.example.egercomms.models.NavBarItem;
@@ -55,7 +56,8 @@ public class MainActivity extends AppCompatActivity
 
                 List<Jurisdiction> jurisdictions = Arrays.asList(dataItems);
                 dataHandler.setJurisdictions(jurisdictions);
-                EventBus.getDefault().post(jurisdictions);
+                JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(jurisdictions);
+                EventBus.getDefault().post(jurisdictionEventObject);
             } else {
                 Toast.makeText(context, "No jurisdictions yet", Toast.LENGTH_SHORT).show();
             }
@@ -78,17 +80,28 @@ public class MainActivity extends AppCompatActivity
         boolean networkOk = NetworkHelper.hasNetworkAccess(this);
         if (dataHandler.getJurisdictions() == null && networkOk) {
             startJurisdictionService(FACULTIES);
-            LocalBroadcastManager.getInstance(getApplicationContext())
-                    .registerReceiver(jurisdictionServiceBroadcastReceiver,
-                            new IntentFilter(JurisdictionService.MY_SERVICE_MESSAGE));
-        }else if(!networkOk) {
+        } else if (!networkOk) {
             dataHandler.setJurisdictions(Arrays.asList(new Jurisdiction("please connect to the internet")));
-        }else{
-            Log.e(TAG, "onCreate: No Fetch");
-            EventBus.getDefault().post(dataHandler.getJurisdictions());
+        } else {
+            JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(dataHandler.getJurisdictions());
+            EventBus.getDefault().post(jurisdictionEventObject);
         }
         setNavBarButtons();
-        Log.e(TAG, "onCreate: ");
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .registerReceiver(jurisdictionServiceBroadcastReceiver,
+                        new IntentFilter(JurisdictionService.MY_SERVICE_MESSAGE));
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .unregisterReceiver(jurisdictionServiceBroadcastReceiver);
     }
 
     private void setNavBarButtons() {
@@ -132,10 +145,16 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Jurisdiction item) {
-        Log.e(TAG, "onListFragmentInteraction: "+item);
-        startAnnouncementService(item.getName());
-        Intent activityIntent = new Intent(this, AnnouncementActivity.class);
-        startActivity(activityIntent);
+        Log.e(TAG, "onListFragmentInteraction:");
+        if (NetworkHelper.hasNetworkAccess(this) && !item.getName().equalsIgnoreCase("please connect to the internet")) {
+            Intent activityIntent = new Intent(this, AnnouncementActivity.class);
+            startActivity(activityIntent);
+            startAnnouncementService(item.getName());
+        }else if(!NetworkHelper.hasNetworkAccess(this)){
+            Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
+        }else{
+            Toast.makeText(this, "Invalid selection", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override
@@ -170,7 +189,6 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(JURISDICTION, jurisdiction);
             startService(intent);
         } else {
-
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }
     }

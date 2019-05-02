@@ -37,7 +37,6 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.e("BIND", "onBindAnnouncements: "+ announcements.toString());
         holder.mItem = announcements.get(position);
         holder.title.setText(announcements.get(position).getTitle());
         holder.message.setText(announcements.get(position).getMessage());

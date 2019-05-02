@@ -37,10 +37,8 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.e("BIND", "onBindJurisdictions: "+ jurisdictions.toString());
         holder.mItem = jurisdictions.get(position);
         holder.mContentView.setText(jurisdictions.get(position).getName());
-        Log.e("BIND", "onBindViewHolder: " + jurisdictions.get(position).getName());
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

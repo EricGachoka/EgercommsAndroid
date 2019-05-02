@@ -8,7 +8,7 @@ import java.util.List;
 
 public class DataHandler {
     private static DataHandler uniqueInstance = new DataHandler();
-    private String item = null;
+    private String item;
     private List<Jurisdiction> jurisdictions;
     private List<Announcement> announcements;
 

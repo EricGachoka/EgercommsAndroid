@@ -50,7 +50,6 @@ public class JurisdictionService extends IntentService {
                 dataItems = call.execute().body();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.i(TAG, "onHandleIntent: " + e.getMessage());
                 return;
             }
 
@@ -62,7 +61,6 @@ public class JurisdictionService extends IntentService {
             manager.sendBroadcast(messageIntent);
         }else{
 //            Return the data to MainActivity
-            Log.e(TAG, "onHandleIntent: call is null");
             Intent messageIntent = new Intent(MY_SERVICE_MESSAGE);
             messageIntent.putExtra(MY_SERVICE_PAYLOAD,  "none");
             LocalBroadcastManager manager =

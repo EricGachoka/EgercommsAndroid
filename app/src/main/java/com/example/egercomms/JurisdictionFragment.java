@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 
 import com.example.egercomms.data.DataHandler;
 import com.example.egercomms.divider.HorizontalDividerItemDecoration;
+import com.example.egercomms.eventObjects.JurisdictionEventObject;
 import com.example.egercomms.models.Jurisdiction;
 
 import org.greenrobot.eventbus.EventBus;
@@ -42,7 +43,7 @@ public class JurisdictionFragment extends Fragment {
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
     private MyJurisdictionRecyclerViewAdapter adapter;
-    private static List<Jurisdiction> jurisdictions = Arrays.asList(new Jurisdiction("please connect to the internet"));
+    private List<Jurisdiction> jurisdictions = Arrays.asList(new Jurisdiction("please connect to the internet"));
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -74,7 +75,6 @@ public class JurisdictionFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_jurisdiction_list, container, false);
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -88,7 +88,6 @@ public class JurisdictionFragment extends Fragment {
             recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
             adapter = new MyJurisdictionRecyclerViewAdapter(jurisdictions, mListener);
             recyclerView.setAdapter(adapter);
-            Log.e("Frag", "onCreateViewJ: "+ dataHandler.getJurisdictions());
         }
         return view;
     }
@@ -132,14 +131,14 @@ public class JurisdictionFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshAdapter(List<Jurisdiction> jurisdictions){
-        Log.e("REFRESH", "refreshAdapter: Jurisdictions");
+    public void refreshAdapter(JurisdictionEventObject jurisdictionEventObject){
+        List<Jurisdiction> jurisdictions = jurisdictionEventObject.getJurisdictions();
         //save state
-        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
-
+//        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
+        this.jurisdictions = jurisdictions;
         recyclerView.setAdapter(new MyJurisdictionRecyclerViewAdapter(jurisdictions, mListener));
 
         //restore state
-        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+//        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
     }
 }
