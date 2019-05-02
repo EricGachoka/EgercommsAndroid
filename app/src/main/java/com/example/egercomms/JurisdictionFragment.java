@@ -69,6 +69,7 @@ public class JurisdictionFragment extends Fragment {
             mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
         }
         EventBus.getDefault().register(this);
+        setRetainInstance(true);
     }
 
     @Override
