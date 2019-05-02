@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">EgerComms</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">EgerComms</string>
+    <string name="nav_header_subtitle">Egerton Staff to Students Communication App</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+    <string name="faculty_reps">Faculty Reps</string>
+    <string name="department_reps">Department Reps</string>
+    <string name="sueu_governors">Sueu Governors</string>
+    <string name="faculty_congresses">Faculty Congresses</string>
+    <string name="sueu">Students Union</string>
+    <string name="residence_hall_congresses">Residence Hall Congresses</string>
+    <string name="attached_file">attached file</string>
+</resources>
