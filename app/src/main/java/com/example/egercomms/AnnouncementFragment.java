@@ -40,6 +40,7 @@ public class AnnouncementFragment extends Fragment {
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
     private MyAnnouncementRecyclerViewAdapter adapter;
+    private List<Announcement> announcements = Arrays.asList(new Announcement("No announcements","please connect to the internet"));
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -82,7 +83,7 @@ public class AnnouncementFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyAnnouncementRecyclerViewAdapter(dataHandler.getAnnouncements(), mListener);
+            adapter = new MyAnnouncementRecyclerViewAdapter(announcements, mListener);
             recyclerView.setAdapter(adapter);
             Log.e("Frag", "onCreateViewA: "+ dataHandler.getAnnouncements());
         }

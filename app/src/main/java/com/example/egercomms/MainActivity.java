@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.egercomms.data.DataHandler;
+import com.example.egercomms.models.Announcement;
 import com.example.egercomms.models.Jurisdiction;
 import com.example.egercomms.models.NavBarItem;
 import com.example.egercomms.services.announcement.AnnouncementService;
@@ -75,11 +76,13 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         boolean networkOk = NetworkHelper.hasNetworkAccess(this);
-        if (dataHandler.getJurisdictions() == null) {
+        if (dataHandler.getJurisdictions() == null && networkOk) {
             startJurisdictionService(FACULTIES);
             LocalBroadcastManager.getInstance(getApplicationContext())
                     .registerReceiver(jurisdictionServiceBroadcastReceiver,
                             new IntentFilter(JurisdictionService.MY_SERVICE_MESSAGE));
+        }else if(!networkOk) {
+            dataHandler.setJurisdictions(Arrays.asList(new Jurisdiction("please connect to the internet")));
         }else{
             Log.e(TAG, "onCreate: No Fetch");
             EventBus.getDefault().post(dataHandler.getJurisdictions());
@@ -167,6 +170,7 @@ public class MainActivity extends AppCompatActivity
             intent.putExtra(JURISDICTION, jurisdiction);
             startService(intent);
         } else {
+
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }
     }

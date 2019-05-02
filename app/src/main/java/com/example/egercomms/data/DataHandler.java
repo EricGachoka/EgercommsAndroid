@@ -9,8 +9,8 @@ import java.util.List;
 public class DataHandler {
     private static DataHandler uniqueInstance = new DataHandler();
     private String item = null;
-    private List<Jurisdiction> jurisdictions = Arrays.asList(new Jurisdiction("please connect to the internet"));
-    private List<Announcement> announcements = Arrays.asList(new Announcement("No announcements","please connect to the internet"));
+    private List<Jurisdiction> jurisdictions;
+    private List<Announcement> announcements;
 
     private DataHandler() {
     }

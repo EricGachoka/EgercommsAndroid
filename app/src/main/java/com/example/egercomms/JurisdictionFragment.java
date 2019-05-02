@@ -42,7 +42,7 @@ public class JurisdictionFragment extends Fragment {
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
     private MyJurisdictionRecyclerViewAdapter adapter;
-
+    private static List<Jurisdiction> jurisdictions = Arrays.asList(new Jurisdiction("please connect to the internet"));
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -86,7 +86,7 @@ public class JurisdictionFragment extends Fragment {
             }
             Drawable divider = getResources().getDrawable(R.drawable.category_divider);
             recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
-            adapter = new MyJurisdictionRecyclerViewAdapter(dataHandler.getJurisdictions(), mListener);
+            adapter = new MyJurisdictionRecyclerViewAdapter(jurisdictions, mListener);
             recyclerView.setAdapter(adapter);
             Log.e("Frag", "onCreateViewJ: "+ dataHandler.getJurisdictions());
         }
