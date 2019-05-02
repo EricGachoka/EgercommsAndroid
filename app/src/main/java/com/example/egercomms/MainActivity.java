@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity
     public static final String RESIDENCE_HALLS = "residence_halls";
     public static final String TAG = "MyActivity";
     private DataHandler dataHandler = DataHandler.getInstance();
+    DrawerLayout drawer;
 
     private BroadcastReceiver jurisdictionServiceBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -71,7 +72,7 @@ public class MainActivity extends AppCompatActivity
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+        drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
                 this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         drawer.addDrawerListener(toggle);
@@ -150,15 +151,16 @@ public class MainActivity extends AppCompatActivity
             Intent activityIntent = new Intent(this, AnnouncementActivity.class);
             startActivity(activityIntent);
             startAnnouncementService(item.getName());
-        }else if(!NetworkHelper.hasNetworkAccess(this)){
+        } else if (!NetworkHelper.hasNetworkAccess(this)) {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
-        }else{
+        } else {
             Toast.makeText(this, "Invalid selection", Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
     public void onClick(View v) {
+        drawer.closeDrawer(GravityCompat.START);
         switch (NavBarItem.fromViewId(v.getId())) {
             case FACULTY_REPS:
                 dataHandler.setItem("faculty-rep");
