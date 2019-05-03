@@ -146,7 +146,7 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onListFragmentInteraction(Jurisdiction item) {
-        Log.e(TAG, "onListFragmentInteraction:");
+        Log.e(TAG, "onListFragmentInteraction:" + item);
         if (NetworkHelper.hasNetworkAccess(this) && !item.getName().equalsIgnoreCase("please connect to the internet")) {
             Intent activityIntent = new Intent(this, AnnouncementActivity.class);
             startActivity(activityIntent);
@@ -200,6 +200,7 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, AnnouncementService.class);
             intent.putExtra(NAME, name);
             startService(intent);
+            Log.e(TAG, "startAnnouncementService: " + name);
         } else {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }

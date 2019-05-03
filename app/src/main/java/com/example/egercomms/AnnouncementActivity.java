@@ -29,7 +29,7 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
         public void onReceive(Context context, Intent intent) {
             Announcement[] dataItems = (Announcement[]) intent
                     .getParcelableArrayExtra(AnnouncementService.MY_SERVICE_PAYLOAD);
-            Log.e(TAG, "onReceive:");
+            Log.e(TAG, "onReceive: "+ Arrays.toString(dataItems));
             if (dataItems != null) {
                 Toast.makeText(context,
                         "Received " + dataItems.length + " items from service",
@@ -39,7 +39,7 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
                 AnnouncementEventObject announcementEventObject = new AnnouncementEventObject(announcements);
                 EventBus.getDefault().post(announcementEventObject);
             }else{
-                Toast.makeText(context, "Invalid selection", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Connection Problem", Toast.LENGTH_SHORT).show();
             }
 
         }

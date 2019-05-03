@@ -21,7 +21,7 @@ public class AnnouncementService extends IntentService {
     String BASE_URL = "https://gachokaeric.pythonanywhere.com/announcements/api/";
     private StringBuilder builder = new StringBuilder();
     String url;
-    private static final String FACULTY_REP = "faculty_rep";
+    private static final String FACULTY_REP = "faculty-rep";
     private static final String DEPARTMENT_REP = "department-rep";
     private static final String SUEU_LEADER = "sueu-leader";
     private static final String FACULTY_CONGRESS = "faculty-congress";
@@ -36,6 +36,7 @@ public class AnnouncementService extends IntentService {
         String name = intent.getStringExtra("name");
         String clickedItemName = dataHandler.getItem();
 //        Make the web service request
+        Log.e(TAG, "onHandleIntent: "+clickedItemName );
         AnnouncementWebService webService =
                 AnnouncementWebService.retrofit.create(AnnouncementWebService.class);
 
