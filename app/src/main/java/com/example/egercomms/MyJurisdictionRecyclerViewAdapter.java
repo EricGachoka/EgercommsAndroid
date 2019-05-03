@@ -5,12 +5,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.TextView;
 
 import com.example.egercomms.JurisdictionFragment.OnListFragmentInteractionListener;
+import com.example.egercomms.data.DataHandler;
 import com.example.egercomms.dummy.DummyContent.DummyItem;
+import com.example.egercomms.eventObjects.JurisdictionEventObject;
 import com.example.egercomms.models.Jurisdiction;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -18,15 +25,75 @@ import java.util.List;
  * specified {@link OnListFragmentInteractionListener}.
  * TODO: Replace the implementation with code for your data type.
  */
-public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJurisdictionRecyclerViewAdapter.ViewHolder> {
+public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJurisdictionRecyclerViewAdapter.ViewHolder>{
 
-    private final List<Jurisdiction> jurisdictions;
+    private List<Jurisdiction> jurisdictions;
+    private List<Jurisdiction> list;
     private final OnListFragmentInteractionListener mListener;
+    private DataHandler dataHandler = DataHandler.getInstance();
 
-    public MyJurisdictionRecyclerViewAdapter(List<Jurisdiction> items, OnListFragmentInteractionListener listener) {
+    public MyJurisdictionRecyclerViewAdapter(List<Jurisdiction> items, OnListFragmentInteractionListener listener)
+
+    {
         jurisdictions = items;
         mListener = listener;
     }
+
+//    @Override
+//    public Filter getFilter() {
+//        return new Filter() {
+//            @SuppressWarnings("unchecked")
+//            @Override
+//            protected void publishResults(CharSequence constraint, FilterResults results) {
+//                list = (List<Jurisdiction>) results.values;
+//                notifyDataSetChanged();
+//            }
+//
+//            @Override
+//            protected FilterResults performFiltering(CharSequence constraint) {
+//                List<Jurisdiction> filteredResults = null;
+//                if (constraint.length() == 0) {
+//                    filteredResults = jurisdictions;
+//                } else {
+//                    filteredResults = getFilteredResults(constraint.toString().toLowerCase());
+//                }
+//
+//                FilterResults results = new FilterResults();
+//                results.values = filteredResults;
+//                notifyDataSetChanged();
+//                return results;
+//            }
+//        };
+//    }
+
+    public void filter(String text) {
+        List<Jurisdiction> jurisdictionsCopy = dataHandler.getJurisdictions();
+        jurisdictions.clear();
+        if(text.isEmpty() && !jurisdictions.isEmpty()){
+            jurisdictions.addAll(jurisdictionsCopy);
+        } else{
+            text = text.toLowerCase();
+            for(Jurisdiction item: jurisdictionsCopy){
+                if(item.getName().toLowerCase().contains(text)){
+                    jurisdictions.add(item);
+                }
+            }
+        }
+        Log.e("FILTER", "filter: "+jurisdictions);
+        JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(jurisdictions);
+        EventBus.getDefault().post(jurisdictionEventObject);
+    }
+
+//    protected List<Jurisdiction> getFilteredResults(String constraint) {
+//        List<Jurisdiction> results = new ArrayList<>();
+//
+//        for (Jurisdiction item : jurisdictions) {
+//            if (item.getName().toLowerCase().contains(constraint)) {
+//                results.add(item);
+//            }
+//        }
+//        return results;
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

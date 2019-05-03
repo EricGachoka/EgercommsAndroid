@@ -35,6 +35,7 @@ import com.example.egercomms.utils.NetworkHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -63,7 +64,7 @@ public class MainActivity extends AppCompatActivity
                         "Received " + dataItems.length + " items from service",
                         Toast.LENGTH_SHORT).show();
 
-                List<Jurisdiction> jurisdictions = Arrays.asList(dataItems);
+                List<Jurisdiction> jurisdictions = new ArrayList<>(Arrays.asList(dataItems));
                 dataHandler.setJurisdictions(jurisdictions);
                 JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(jurisdictions);
                 EventBus.getDefault().post(jurisdictionEventObject);
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity
         if (dataHandler.getJurisdictions() == null && networkOk) {
             startJurisdictionService(FACULTIES);
         } else if (!networkOk) {
-            dataHandler.setJurisdictions(Arrays.asList(new Jurisdiction("please connect to the internet")));
+            dataHandler.setJurisdictions(new ArrayList<>(Arrays.asList(new Jurisdiction("please connect to the internet"))));
         } else {
             JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(dataHandler.getJurisdictions());
             EventBus.getDefault().post(jurisdictionEventObject);
@@ -134,27 +135,27 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
-        int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        // Inflate the menu; this adds items to the action bar if it is present.
+////        getMenuInflater().inflate(R.menu.main, menu);
+//        return true;
+//    }
+//
+//    @Override
+//    public boolean onOptionsItemSelected(MenuItem item) {
+//        // Handle action bar item clicks here. The action bar will
+//        // automatically handle clicks on the Home/Up button, so long
+//        // as you specify a parent activity in AndroidManifest.xml.
+//        int id = item.getItemId();
+//
+//        //noinspection SimplifiableIfStatement
+////        if (id == R.id.action_settings) {
+////            return true;
+////        }
+//
+//        return super.onOptionsItemSelected(item);
+//    }
 
     @Override
     public void onListFragmentInteraction(Jurisdiction item) {

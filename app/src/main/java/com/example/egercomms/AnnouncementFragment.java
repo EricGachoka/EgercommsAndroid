@@ -22,6 +22,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -43,8 +44,8 @@ public class AnnouncementFragment extends Fragment{
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
     private MyAnnouncementRecyclerViewAdapter adapter;
-    private List<Announcement> announcements = Arrays.asList(
-            new Announcement("No announcements", "please connect to the internet", "none", "none"));
+    private List<Announcement> announcements = new ArrayList<>(Arrays.asList(
+            new Announcement("No announcements", "please connect to the internet", "none", "none")));
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the

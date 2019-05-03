@@ -24,6 +24,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -44,7 +45,7 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
                         "Received " + dataItems.length + " items from service",
                         Toast.LENGTH_SHORT).show();
 
-                List<Announcement> announcements = Arrays.asList(dataItems);
+                List<Announcement> announcements = new ArrayList<>(Arrays.asList(dataItems));
                 AnnouncementEventObject announcementEventObject = new AnnouncementEventObject(announcements);
                 EventBus.getDefault().post(announcementEventObject);
             }else{
