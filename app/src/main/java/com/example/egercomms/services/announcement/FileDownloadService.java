@@ -160,8 +160,7 @@ public class FileDownloadService extends IntentService {
                         outputStream.close();
                     }
                 }
-            }else{
-                notificationManager.cancel(0);
+            }else{                notificationManager.cancel(0);
                 return false;
             }
         } catch (IOException e) {

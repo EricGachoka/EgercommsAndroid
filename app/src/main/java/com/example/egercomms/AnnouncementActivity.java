@@ -31,6 +31,7 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
     public static final String TAG = "AnnActivity";
     private DataHandler dataHandler = DataHandler.getInstance();
     private static final String PATH = "filePath";
+    private StringBuilder builder = new StringBuilder();
 
     private BroadcastReceiver announcementServiceBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -65,6 +66,7 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_announcement);
+        //TODO: set title dynamically
         EventBus.getDefault().register(this);
     }
 
