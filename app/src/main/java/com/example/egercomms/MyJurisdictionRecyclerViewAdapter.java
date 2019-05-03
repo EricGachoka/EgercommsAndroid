@@ -39,62 +39,6 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
         mListener = listener;
     }
 
-//    @Override
-//    public Filter getFilter() {
-//        return new Filter() {
-//            @SuppressWarnings("unchecked")
-//            @Override
-//            protected void publishResults(CharSequence constraint, FilterResults results) {
-//                list = (List<Jurisdiction>) results.values;
-//                notifyDataSetChanged();
-//            }
-//
-//            @Override
-//            protected FilterResults performFiltering(CharSequence constraint) {
-//                List<Jurisdiction> filteredResults = null;
-//                if (constraint.length() == 0) {
-//                    filteredResults = jurisdictions;
-//                } else {
-//                    filteredResults = getFilteredResults(constraint.toString().toLowerCase());
-//                }
-//
-//                FilterResults results = new FilterResults();
-//                results.values = filteredResults;
-//                notifyDataSetChanged();
-//                return results;
-//            }
-//        };
-//    }
-
-    public void filter(String text) {
-        List<Jurisdiction> jurisdictionsCopy = dataHandler.getJurisdictions();
-        jurisdictions.clear();
-        if(text.isEmpty() && !jurisdictions.isEmpty()){
-            jurisdictions.addAll(jurisdictionsCopy);
-        } else{
-            text = text.toLowerCase();
-            for(Jurisdiction item: jurisdictionsCopy){
-                if(item.getName().toLowerCase().contains(text)){
-                    jurisdictions.add(item);
-                }
-            }
-        }
-        Log.e("FILTER", "filter: "+jurisdictions);
-        JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(jurisdictions);
-        EventBus.getDefault().post(jurisdictionEventObject);
-    }
-
-//    protected List<Jurisdiction> getFilteredResults(String constraint) {
-//        List<Jurisdiction> results = new ArrayList<>();
-//
-//        for (Jurisdiction item : jurisdictions) {
-//            if (item.getName().toLowerCase().contains(constraint)) {
-//                results.add(item);
-//            }
-//        }
-//        return results;
-//    }
-
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
@@ -116,6 +60,24 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
                 }
             }
         });
+    }
+
+    public void filter(String text) {
+        List<Jurisdiction> jurisdictionsCopy = dataHandler.getJurisdictions();
+        jurisdictions.clear();
+        if(text.isEmpty() && !jurisdictions.isEmpty()){
+            jurisdictions.addAll(jurisdictionsCopy);
+        } else{
+            text = text.toLowerCase();
+            for(Jurisdiction item: jurisdictionsCopy){
+                if(item.getName().toLowerCase().contains(text)){
+                    jurisdictions.add(item);
+                }
+            }
+        }
+        Log.e("FILTER", "filter: "+jurisdictions);
+        JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(jurisdictions);
+        EventBus.getDefault().post(jurisdictionEventObject);
     }
 
     @Override

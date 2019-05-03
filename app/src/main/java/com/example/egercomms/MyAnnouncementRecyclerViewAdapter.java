@@ -3,6 +3,7 @@ package com.example.egercomms;
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,9 +11,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.egercomms.AnnouncementFragment.OnListFragmentInteractionListener;
+import com.example.egercomms.data.DataHandler;
 import com.example.egercomms.dummy.DummyContent.DummyItem;
+import com.example.egercomms.eventObjects.AnnouncementEventObject;
 import com.example.egercomms.eventObjects.FilePathEventObject;
+import com.example.egercomms.eventObjects.JurisdictionEventObject;
 import com.example.egercomms.models.Announcement;
+import com.example.egercomms.models.Jurisdiction;
 import com.example.egercomms.utils.NetworkHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -31,11 +36,30 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
     public static final String TAG = "AnnAdapter";
     private StringBuilder builder = new StringBuilder();
     private Context mContext;
+    private DataHandler dataHandler = DataHandler.getInstance();
 
     public MyAnnouncementRecyclerViewAdapter(Context context, List<Announcement> items, OnListFragmentInteractionListener listener) {
         announcements = items;
         mListener = listener;
         mContext = context;
+    }
+
+    public void filter(String text) {
+        List<Announcement> jurisdictionsCopy = dataHandler.getAnnouncements();
+        announcements.clear();
+        if (text.isEmpty() && !announcements.isEmpty()) {
+            announcements.addAll(jurisdictionsCopy);
+        } else {
+            text = text.toLowerCase();
+            for (Announcement item : jurisdictionsCopy) {
+                if (item.getTitle().toLowerCase().contains(text) || item.getMessage().toLowerCase().contains(text)) {
+                    announcements.add(item);
+                }
+            }
+        }
+        Log.e("FILTER", "filter: " + announcements);
+        AnnouncementEventObject announcementEventObject = new AnnouncementEventObject(announcements);
+        EventBus.getDefault().post(announcementEventObject);
     }
 
     @Override
@@ -55,7 +79,7 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
         String attachment = announcements.get(position).getAttachments();
         if (attachment != null && !TextUtils.isEmpty(attachment)) {
             holder.attachment.setText(getFileName(attachment));
-        }else{
+        } else {
             holder.attachment.setText("none");
         }
 
@@ -71,10 +95,10 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
         });
     }
 
-    private String returnNotNullString(String name){
+    private String returnNotNullString(String name) {
         if (name != null && !TextUtils.isEmpty(name)) {
             return name;
-        }else{
+        } else {
             return "none";
         }
     }
@@ -110,10 +134,10 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
                 @Override
                 public void onClick(View v) {
                     String filePath = mItem.getAttachments();
-                    if (NetworkHelper.hasNetworkAccess(mContext) && filePath!=null) {
+                    if (NetworkHelper.hasNetworkAccess(mContext) && filePath != null) {
                         FilePathEventObject filePathEventObject = new FilePathEventObject(filePath);
                         EventBus.getDefault().post(filePathEventObject);
-                    } else if(!NetworkHelper.hasNetworkAccess(mContext) && filePath!=null) {
+                    } else if (!NetworkHelper.hasNetworkAccess(mContext) && filePath != null) {
                         Toast.makeText(mContext, "Network not available", Toast.LENGTH_SHORT).show();
                     }
                 }

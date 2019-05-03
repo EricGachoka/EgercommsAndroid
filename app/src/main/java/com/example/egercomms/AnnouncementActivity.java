@@ -44,8 +44,8 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
                 Toast.makeText(context,
                         "Received " + dataItems.length + " items from service",
                         Toast.LENGTH_SHORT).show();
-
                 List<Announcement> announcements = new ArrayList<>(Arrays.asList(dataItems));
+                dataHandler.setAnnouncements(announcements);
                 AnnouncementEventObject announcementEventObject = new AnnouncementEventObject(announcements);
                 EventBus.getDefault().post(announcementEventObject);
             }else{
