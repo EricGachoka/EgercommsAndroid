@@ -38,7 +38,7 @@
                     style="@style/nav_drawer_menu_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:text="@string/faculty_reps" />
 
                 <include layout="@layout/divider" />
@@ -48,7 +48,7 @@
                     style="@style/nav_drawer_menu_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:text="@string/department_reps" />
 
                 <include layout="@layout/divider" />
@@ -58,7 +58,7 @@
                     style="@style/nav_drawer_menu_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:text="@string/sueu_governors" />
 
                 <include layout="@layout/divider" />
@@ -68,7 +68,7 @@
                     style="@style/nav_drawer_menu_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:text="@string/faculty_congresses" />
 
                 <include layout="@layout/divider" />
@@ -78,7 +78,7 @@
                     style="@style/nav_drawer_menu_item"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:drawableStart="@drawable/ic_person_black_24dp"
                     android:text="@string/residence_hall_congresses" />
             </LinearLayout>
         </ScrollView>

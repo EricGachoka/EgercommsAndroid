@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/text_margin"
-            android:drawableStart="@drawable/ic_hourglass_empty_black_24dp"
+            android:drawableStart="@drawable/ic_hourglass_full_black_24dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="15sp" />
 
@@ -45,7 +45,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="@dimen/text_margin"
             android:layout_marginRight="@dimen/text_margin"
-            android:drawableStart="@drawable/ic_attachment_black_24dp"
+            android:drawableStart="@drawable/ic_file_download_black_24dp"
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="15sp" />
 
