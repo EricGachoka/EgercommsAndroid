@@ -1,9 +1,6 @@
 package com.example.egercomms.services.announcement;
 
-import android.text.TextUtils;
-
 import com.example.egercomms.models.Announcement;
-import com.example.egercomms.models.Jurisdiction;
 
 import retrofit2.Call;
 import retrofit2.Retrofit;
@@ -34,4 +31,5 @@ public interface AnnouncementWebService {
 
     @GET
     Call<Announcement[]> facultyCongressAnnouncements(@Url String url);
+
 }

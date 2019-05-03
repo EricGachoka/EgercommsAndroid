@@ -36,7 +36,6 @@ public class AnnouncementService extends IntentService {
         String name = intent.getStringExtra("name");
         String clickedItemName = dataHandler.getItem();
 //        Make the web service request
-        Log.e(TAG, "onHandleIntent: "+clickedItemName );
         AnnouncementWebService webService =
                 AnnouncementWebService.retrofit.create(AnnouncementWebService.class);
 

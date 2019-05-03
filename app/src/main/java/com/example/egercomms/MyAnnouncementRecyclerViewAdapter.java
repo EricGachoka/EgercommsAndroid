@@ -1,16 +1,21 @@
 package com.example.egercomms;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.egercomms.AnnouncementFragment.OnListFragmentInteractionListener;
 import com.example.egercomms.dummy.DummyContent.DummyItem;
+import com.example.egercomms.eventObjects.FilePathEventObject;
 import com.example.egercomms.models.Announcement;
+import com.example.egercomms.utils.NetworkHelper;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.util.List;
 
@@ -25,10 +30,12 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
     private final OnListFragmentInteractionListener mListener;
     public static final String TAG = "AnnAdapter";
     private StringBuilder builder = new StringBuilder();
+    private Context mContext;
 
-    public MyAnnouncementRecyclerViewAdapter(List<Announcement> items, OnListFragmentInteractionListener listener) {
+    public MyAnnouncementRecyclerViewAdapter(Context context, List<Announcement> items, OnListFragmentInteractionListener listener) {
         announcements = items;
         mListener = listener;
+        mContext = context;
     }
 
     @Override
@@ -98,7 +105,21 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
             deadline = (TextView) view.findViewById(R.id.deadline);
             attachment = (TextView) view.findViewById(R.id.attachments);
             updated = (TextView) view.findViewById(R.id.updated);
+
+            attachment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String filePath = mItem.getAttachments();
+                    if (NetworkHelper.hasNetworkAccess(mContext) && filePath!=null) {
+                        FilePathEventObject filePathEventObject = new FilePathEventObject(filePath);
+                        EventBus.getDefault().post(filePathEventObject);
+                    } else if(!NetworkHelper.hasNetworkAccess(mContext) && filePath!=null) {
+                        Toast.makeText(mContext, "Network not available", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
+
 
         @Override
         public String toString() {

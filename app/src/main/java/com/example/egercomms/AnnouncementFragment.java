@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.egercomms.data.DataHandler;
 import com.example.egercomms.eventObjects.AnnouncementEventObject;
@@ -29,7 +31,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class AnnouncementFragment extends Fragment {
+public class AnnouncementFragment extends Fragment{
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
@@ -76,7 +78,6 @@ public class AnnouncementFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_announcement_list, container, false);
-
         // Set the adapter
         if (view instanceof RecyclerView) {
             Context context = view.getContext();
@@ -86,7 +87,7 @@ public class AnnouncementFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            adapter = new MyAnnouncementRecyclerViewAdapter(announcements, mListener);
+            adapter = new MyAnnouncementRecyclerViewAdapter(getContext(), announcements, mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;
@@ -137,7 +138,7 @@ public class AnnouncementFragment extends Fragment {
         //save state
 //        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
         this.announcements = announcements;
-        recyclerView.setAdapter(new MyAnnouncementRecyclerViewAdapter(announcements, mListener));
+        recyclerView.setAdapter(new MyAnnouncementRecyclerViewAdapter(getContext(), announcements, mListener));
 
         //restore state
 //        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);

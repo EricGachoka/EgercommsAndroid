@@ -37,6 +37,9 @@
         <service
             android:name=".services.announcement.AnnouncementService"
             android:exported="false" />
+        <service
+            android:name=".services.announcement.FileDownloadService"
+            android:exported="false" />
     </application>
 
 </manifest>
