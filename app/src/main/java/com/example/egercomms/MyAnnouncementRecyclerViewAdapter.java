@@ -1,6 +1,7 @@
 package com.example.egercomms;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -39,14 +40,13 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        Log.e(TAG, "onBindViewHolder: "+announcements.get(position));
         holder.mItem = announcements.get(position);
-        holder.title.setText(announcements.get(position).getTitle());
-        holder.message.setText(announcements.get(position).getMessage());
-        holder.deadline.setText(announcements.get(position).getDeadline());
-        holder.updated.setText(announcements.get(position).getUpdated());
+        holder.title.setText(returnNotNullString(announcements.get(position).getTitle()));
+        holder.message.setText(returnNotNullString(announcements.get(position).getMessage()));
+        holder.deadline.setText(returnNotNullString(announcements.get(position).getDeadline()));
+        holder.updated.setText(returnNotNullString(announcements.get(position).getUpdated()));
         String attachment = announcements.get(position).getAttachments();
-        if (attachment != null) {
+        if (attachment != null && !TextUtils.isEmpty(attachment)) {
             holder.attachment.setText(getFileName(attachment));
         }else{
             holder.attachment.setText("none");
@@ -62,6 +62,14 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
                 }
             }
         });
+    }
+
+    private String returnNotNullString(String name){
+        if (name != null && !TextUtils.isEmpty(name)) {
+            return name;
+        }else{
+            return "none";
+        }
     }
 
     private String getFileName(String path) {
