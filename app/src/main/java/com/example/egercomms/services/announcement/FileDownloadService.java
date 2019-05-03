@@ -6,6 +6,8 @@ import android.os.Environment;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.example.egercomms.data.DataHandler;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -26,6 +28,8 @@ public class FileDownloadService extends IntentService {
     public static final String TAG = "FileService";
     private String path;
     private String message;
+    private DataHandler dataHandler = DataHandler.getInstance();
+    private boolean permissionGranted;
 
     public FileDownloadService() {
         super("FileDownloadService");
@@ -33,42 +37,46 @@ public class FileDownloadService extends IntentService {
 
     @Override
     protected void onHandleIntent(Intent intent) {
+        permissionGranted = dataHandler.isPermissionsGranted();
         path = intent.getStringExtra(PATH);
         String url = builder.append(BASE_URL).append(path).toString();
         FileDownloadWebService webService = FileDownloadWebService.retrofit.create(FileDownloadWebService.class);
+        if (permissionGranted) {
+            Call<ResponseBody> call = webService.downloadAttachments(url);
+            call.enqueue(new Callback<ResponseBody>() {
+                @Override
+                public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                    if (response.isSuccessful()) {
+                        Log.d(TAG, "server contacted and has file");
 
-        Call<ResponseBody> call = webService.downloadAttachments(url);
-        call.enqueue(new Callback<ResponseBody>() {
-            @Override
-            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                if (response.isSuccessful()) {
-                    Log.d(TAG, "server contacted and has file");
+                        boolean writtenToDisk = writeResponseBodyToDisk(response.body());
 
-                    boolean writtenToDisk = writeResponseBodyToDisk(response.body());
+                        message = "File Downloaded to Egercomms/downloads";
 
-                    message = "File Downloaded";
+                        Log.d(TAG, "file download was a success? " + writtenToDisk);
 
-                    Log.d(TAG, "file download was a success? " + writtenToDisk);
+                        Log.e("MESSAGE", "onHandleIntent: " + message);
+                        returnResults(message);
+                    } else {
+                        message = "Problem saving file";
+                        Log.d(TAG, "server contact failed");
+                        returnResults(message);
+                    }
+                }
 
-                    Log.e("MESSAGE", "onHandleIntent: "+message );
-                    returnResults(message);
-                } else {
-                    message = "Problem saving file";
-                    Log.d(TAG, "server contact failed");
+                @Override
+                public void onFailure(Call<ResponseBody> call, Throwable t) {
+                    Log.e(TAG, "error");
+                    message = "File download failed";
                     returnResults(message);
                 }
-            }
-
-            @Override
-            public void onFailure(Call<ResponseBody> call, Throwable t) {
-                Log.e(TAG, "error");
-                message = "File download failed";
-                returnResults(message);
-            }
-        });
+            });
+        }else{
+            returnResults("You must grant file permissions to download files");
+        }
     }
 
-    private void returnResults(String result){
+    private void returnResults(String result) {
         Intent messageIntent = new Intent(MY_SERVICE_MESSAGE);
         messageIntent.putExtra(MY_SERVICE_PAYLOAD, result);
         LocalBroadcastManager manager =
@@ -78,7 +86,12 @@ public class FileDownloadService extends IntentService {
 
     private boolean writeResponseBodyToDisk(ResponseBody body) {
         try {
-            File file = new File(getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS) + File.separator + getFileName(path));
+            String folderPath = "Egercomms"+File.separator+"downloads";
+            File folder = new File(Environment.getExternalStorageDirectory(), folderPath);
+            if(!folder.exists()){
+                folder.mkdirs();
+            }
+            File file = new File(Environment.getExternalStorageDirectory(), folderPath+File.separator + getFileName(path));
 
             InputStream inputStream = null;
             OutputStream outputStream = null;

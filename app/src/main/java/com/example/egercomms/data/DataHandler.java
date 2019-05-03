@@ -11,6 +11,7 @@ public class DataHandler {
     private String item;
     private List<Jurisdiction> jurisdictions;
     private List<Announcement> announcements;
+    private boolean permissionsGranted;
 
     private DataHandler() {
     }
@@ -41,5 +42,13 @@ public class DataHandler {
 
     public void setAnnouncements(List<Announcement> announcements) {
         this.announcements = announcements;
+    }
+
+    public boolean isPermissionsGranted() {
+        return permissionsGranted;
+    }
+
+    public void setPermissionsGranted(boolean permissionsGranted) {
+        this.permissionsGranted = permissionsGranted;
     }
 }

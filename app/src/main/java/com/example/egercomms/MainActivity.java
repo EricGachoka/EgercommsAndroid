@@ -1,10 +1,16 @@
 package com.example.egercomms;
 
+import android.Manifest;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
+import android.os.Environment;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.view.View;
@@ -42,8 +48,10 @@ public class MainActivity extends AppCompatActivity
     public static final String SUEU_SEATS = "sueu_seats";
     public static final String RESIDENCE_HALLS = "residence_halls";
     public static final String TAG = "MyActivity";
+    private static final int REQUEST_PERMISSION_WRITE = 1001;
     private DataHandler dataHandler = DataHandler.getInstance();
     DrawerLayout drawer;
+    private boolean permissionGranted;
 
     private BroadcastReceiver jurisdictionServiceBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -88,6 +96,10 @@ public class MainActivity extends AppCompatActivity
             EventBus.getDefault().post(jurisdictionEventObject);
         }
         setNavBarButtons();
+
+        if(!permissionGranted){
+            dataHandler.setPermissionsGranted(checkPermissions());
+        }
     }
 
     @Override
@@ -205,4 +217,52 @@ public class MainActivity extends AppCompatActivity
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }
     }
+
+    // Checks if external storage is available for read and write
+    public boolean isExternalStorageWritable() {
+        String state = Environment.getExternalStorageState();
+        return Environment.MEDIA_MOUNTED.equals(state);
+    }
+
+    // Initiate request for permissions.
+    private boolean checkPermissions() {
+
+        if (!isExternalStorageWritable()) {
+            Toast.makeText(this, "This app only works on devices with usable external storage",
+                    Toast.LENGTH_SHORT).show();
+            return false;
+        }
+
+        int permissionCheck = ContextCompat.checkSelfPermission(this,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permissionCheck != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this,
+                    new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                    REQUEST_PERMISSION_WRITE);
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    // Handle permissions result
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_PERMISSION_WRITE:
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    permissionGranted = true;
+                    dataHandler.setPermissionsGranted(true);
+                    Toast.makeText(this, "External storage permission granted",
+                            Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(this, "You must grant permission to download files", Toast.LENGTH_SHORT).show();
+                }
+                break;
+        }
+    }
+
 }
