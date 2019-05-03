@@ -3,13 +3,11 @@ package com.example.egercomms.models;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import java.util.Date;
-
 public class Announcement implements Parcelable {
     private String title;
     private String message;
     private String deadline;
-    private String attachment;
+    private String attachments;
     private String updated;
 
     public Announcement(String title, String message) {
@@ -41,12 +39,12 @@ public class Announcement implements Parcelable {
         this.deadline = deadline;
     }
 
-    public String getAttachment() {
-        return attachment;
+    public String getAttachments() {
+        return attachments;
     }
 
-    public void setAttachment(String attachment) {
-        this.attachment = attachment;
+    public void setAttachments(String attachments) {
+        this.attachments = attachments;
     }
 
     public String getUpdated() {
@@ -63,7 +61,7 @@ public class Announcement implements Parcelable {
                 "title='" + title + '\'' +
                 ", message='" + message + '\'' +
                 ", deadline='" + deadline + '\'' +
-                ", attachment='" + attachment + '\'' +
+                ", attachments='" + attachments + '\'' +
                 ", updated='" + updated + '\'' +
                 '}';
     }
@@ -78,7 +76,7 @@ public class Announcement implements Parcelable {
         dest.writeString(this.title);
         dest.writeString(this.message);
         dest.writeString(this.deadline);
-        dest.writeString(this.attachment);
+        dest.writeString(this.attachments);
         dest.writeString(this.updated);
     }
 
@@ -89,7 +87,7 @@ public class Announcement implements Parcelable {
         this.title = in.readString();
         this.message = in.readString();
         this.deadline = in.readString();
-        this.attachment = in.readString();
+        this.attachments = in.readString();
         this.updated = in.readString();
     }
 

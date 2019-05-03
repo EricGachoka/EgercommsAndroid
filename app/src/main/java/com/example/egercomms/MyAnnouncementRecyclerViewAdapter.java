@@ -22,6 +22,8 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
 
     private final List<Announcement> announcements;
     private final OnListFragmentInteractionListener mListener;
+    public static final String TAG = "AnnAdapter";
+    private StringBuilder builder = new StringBuilder();
 
     public MyAnnouncementRecyclerViewAdapter(List<Announcement> items, OnListFragmentInteractionListener listener) {
         announcements = items;
@@ -37,12 +39,13 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
+        Log.e(TAG, "onBindViewHolder: "+announcements.get(position));
         holder.mItem = announcements.get(position);
         holder.title.setText(announcements.get(position).getTitle());
         holder.message.setText(announcements.get(position).getMessage());
         holder.deadline.setText(announcements.get(position).getDeadline());
         holder.updated.setText(announcements.get(position).getUpdated());
-        String attachment = announcements.get(position).getAttachment();
+        String attachment = announcements.get(position).getAttachments();
         if (attachment != null) {
             holder.attachment.setText(getFileName(attachment));
         }else{
@@ -85,7 +88,7 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
             title = (TextView) view.findViewById(R.id.title);
             message = (TextView) view.findViewById(R.id.messsage);
             deadline = (TextView) view.findViewById(R.id.deadline);
-            attachment = (TextView) view.findViewById(R.id.attachment);
+            attachment = (TextView) view.findViewById(R.id.attachments);
             updated = (TextView) view.findViewById(R.id.updated);
         }
 
