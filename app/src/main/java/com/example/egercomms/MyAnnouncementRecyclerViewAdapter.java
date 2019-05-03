@@ -49,7 +49,7 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
         if (attachment != null) {
             holder.attachment.setText(getFileName(attachment));
         }else{
-            holder.attachment.setText(attachment);
+            holder.attachment.setText("none");
         }
 
         holder.mView.setOnClickListener(new View.OnClickListener() {

@@ -41,7 +41,8 @@ public class AnnouncementFragment extends Fragment {
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
     private MyAnnouncementRecyclerViewAdapter adapter;
-    private List<Announcement> announcements = Arrays.asList(new Announcement("No announcements","please connect to the internet"));
+    private List<Announcement> announcements = Arrays.asList(
+            new Announcement("No announcements", "please connect to the internet", "none", "none"));
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -131,7 +132,7 @@ public class AnnouncementFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshAnnouncementsAdapter(AnnouncementEventObject announcementEventObject){
+    public void refreshAnnouncementsAdapter(AnnouncementEventObject announcementEventObject) {
         List<Announcement> announcements = announcementEventObject.getAnnouncements();
         //save state
 //        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();

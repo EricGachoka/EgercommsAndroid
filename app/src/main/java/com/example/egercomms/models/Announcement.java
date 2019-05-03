@@ -15,6 +15,13 @@ public class Announcement implements Parcelable {
         this.message = message;
     }
 
+    public Announcement(String title, String message, String deadline, String attachments) {
+        this.title = title;
+        this.message = message;
+        this.deadline = deadline;
+        this.attachments = attachments;
+    }
+
     public String getTitle() {
         return title;
     }

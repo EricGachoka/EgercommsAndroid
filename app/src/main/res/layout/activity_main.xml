@@ -21,54 +21,66 @@
         android:layout_gravity="start"
         android:background="@color/background_color"
         android:fitsSystemWindows="true">
+
         <ScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <include layout="@layout/nav_header_main"/>
-
-            <TextView
-                android:id="@+id/faculty_reps"
-                style="@style/nav_drawer_menu_item"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/faculty_reps" />
+                android:orientation="vertical">
 
+                <include layout="@layout/nav_header_main" />
 
-            <TextView
-                android:id="@+id/department_reps"
-                style="@style/nav_drawer_menu_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/department_reps" />
+                <TextView
+                    android:id="@+id/faculty_reps"
+                    style="@style/nav_drawer_menu_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:text="@string/faculty_reps" />
 
+                <include layout="@layout/divider" />
 
-            <TextView
-                android:id="@+id/sueu_governors"
-                style="@style/nav_drawer_menu_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/sueu_governors" />
+                <TextView
+                    android:id="@+id/department_reps"
+                    style="@style/nav_drawer_menu_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:text="@string/department_reps" />
 
-            <TextView
-                android:id="@+id/faculty_congresses"
-                style="@style/nav_drawer_menu_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/faculty_congresses" />
+                <include layout="@layout/divider" />
 
-            <TextView
-                android:id="@+id/residence_congresses"
-                style="@style/nav_drawer_menu_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/residence_hall_congresses" />
-        </LinearLayout>
+                <TextView
+                    android:id="@+id/sueu_governors"
+                    style="@style/nav_drawer_menu_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:text="@string/sueu_governors" />
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    android:id="@+id/faculty_congresses"
+                    style="@style/nav_drawer_menu_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:text="@string/faculty_congresses" />
+
+                <include layout="@layout/divider" />
+
+                <TextView
+                    android:id="@+id/residence_congresses"
+                    style="@style/nav_drawer_menu_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_person_outline_black_24dp"
+                    android:text="@string/residence_hall_congresses" />
+            </LinearLayout>
         </ScrollView>
     </android.support.design.widget.NavigationView>
 </android.support.v4.widget.DrawerLayout>
