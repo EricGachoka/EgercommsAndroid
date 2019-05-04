@@ -39,7 +39,6 @@ public class AnnouncementActivity extends AppCompatActivity implements Announcem
         public void onReceive(Context context, Intent intent) {
             Announcement[] dataItems = (Announcement[]) intent
                     .getParcelableArrayExtra(AnnouncementService.MY_SERVICE_PAYLOAD);
-            Log.e(TAG, "onReceive: "+ Arrays.toString(dataItems));
             if (dataItems != null) {
                 Toast.makeText(context,
                         "Received " + dataItems.length + " items from service",

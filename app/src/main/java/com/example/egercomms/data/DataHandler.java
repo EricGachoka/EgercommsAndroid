@@ -1,17 +1,18 @@
 package com.example.egercomms.data;
 
+import com.example.egercomms.models.Account;
 import com.example.egercomms.models.Announcement;
 import com.example.egercomms.models.Jurisdiction;
 
-import java.util.Arrays;
 import java.util.List;
 
 public class DataHandler {
     private static DataHandler uniqueInstance = new DataHandler();
     private String item;
-    private List<Jurisdiction> jurisdictions;
+    private List<Account> accounts;
     private List<Announcement> announcements;
     private boolean permissionsGranted;
+    private List<Jurisdiction> jurisdictions;
 
     private DataHandler() {
     }
@@ -28,12 +29,12 @@ public class DataHandler {
         this.item = item;
     }
 
-    public List<Jurisdiction> getJurisdictions() {
-        return jurisdictions;
+    public List<Account> getAccounts() {
+        return accounts;
     }
 
-    public void setJurisdictions(List<Jurisdiction> jurisdictions) {
-        this.jurisdictions = jurisdictions;
+    public void setAccounts(List<Account> accounts) {
+        this.accounts = accounts;
     }
 
     public List<Announcement> getAnnouncements() {
@@ -50,5 +51,13 @@ public class DataHandler {
 
     public void setPermissionsGranted(boolean permissionsGranted) {
         this.permissionsGranted = permissionsGranted;
+    }
+
+    public List<Jurisdiction> getJurisdictions() {
+        return jurisdictions;
+    }
+
+    public void setJurisdictions(List<Jurisdiction> jurisdictions) {
+        this.jurisdictions = jurisdictions;
     }
 }

@@ -45,9 +45,10 @@ public class AnnouncementFragment extends Fragment{
     private OnListFragmentInteractionListener mListener;
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
+    public static final String NO_INTERNET = "no internet";
     private MyAnnouncementRecyclerViewAdapter adapter;
     private List<Announcement> announcements = new ArrayList<>(Arrays.asList(
-            new Announcement("No announcements", "please connect to the internet", "none", "none")));
+            new Announcement("No announcements", NO_INTERNET, "none", "none")));
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -160,12 +161,7 @@ public class AnnouncementFragment extends Fragment{
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshAnnouncementsAdapter(AnnouncementEventObject announcementEventObject) {
         List<Announcement> announcements = announcementEventObject.getAnnouncements();
-        //save state
-//        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
         this.announcements = announcements;
         recyclerView.setAdapter(new MyAnnouncementRecyclerViewAdapter(getContext(), announcements, mListener));
-
-        //restore state
-//        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
     }
 }

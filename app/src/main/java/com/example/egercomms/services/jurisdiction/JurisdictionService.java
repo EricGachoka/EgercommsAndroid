@@ -8,6 +8,7 @@ import android.util.Log;
 import com.example.egercomms.models.Jurisdiction;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import retrofit2.Call;
 

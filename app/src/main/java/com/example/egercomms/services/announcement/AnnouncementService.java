@@ -9,6 +9,7 @@ import com.example.egercomms.data.DataHandler;
 import com.example.egercomms.models.Announcement;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 import retrofit2.Call;
 

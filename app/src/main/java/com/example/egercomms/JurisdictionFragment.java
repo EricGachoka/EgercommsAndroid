@@ -1,7 +1,6 @@
 package com.example.egercomms;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v4.app.Fragment;
@@ -19,9 +18,11 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.egercomms.data.DataHandler;
-import com.example.egercomms.divider.HorizontalDividerItemDecoration;
-import com.example.egercomms.eventObjects.JurisdictionEventObject;
+import com.example.egercomms.eventObjects.AccountEventObject;
+import com.example.egercomms.models.Account;
 import com.example.egercomms.models.Jurisdiction;
+import com.example.egercomms.models.Staff;
+import com.example.egercomms.models.User;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -49,7 +50,9 @@ public class JurisdictionFragment extends Fragment {
     private RecyclerView recyclerView;
     private Parcelable recyclerViewState;
     private MyJurisdictionRecyclerViewAdapter adapter;
-    private List<Jurisdiction> jurisdictions = new ArrayList<>(Arrays.asList(new Jurisdiction("please connect to the internet")));
+    public static final String NO_INTERNET = "no internet";
+    private List<Account> accounts = new ArrayList<>(Arrays.asList(new Account(new Jurisdiction("no internet"), new Staff(new User("","")))));
+
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
@@ -92,9 +95,7 @@ public class JurisdictionFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            Drawable divider = getResources().getDrawable(R.drawable.category_divider);
-            recyclerView.addItemDecoration(new HorizontalDividerItemDecoration(divider));
-            adapter = new MyJurisdictionRecyclerViewAdapter(jurisdictions, mListener);
+            adapter = new MyJurisdictionRecyclerViewAdapter(context, accounts, mListener);
             recyclerView.setAdapter(adapter);
         }
         return view;
@@ -161,14 +162,9 @@ public class JurisdictionFragment extends Fragment {
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshAdapter(JurisdictionEventObject jurisdictionEventObject){
-        List<Jurisdiction> jurisdictions = jurisdictionEventObject.getJurisdictions();
-        //save state
-//        recyclerViewState = recyclerView.getLayoutManager().onSaveInstanceState();
-        this.jurisdictions = jurisdictions;
-        recyclerView.setAdapter(new MyJurisdictionRecyclerViewAdapter(jurisdictions, mListener));
-
-        //restore state
-//        recyclerView.getLayoutManager().onRestoreInstanceState(recyclerViewState);
+    public void refreshAdapter(AccountEventObject accountEventObject){
+        List<Account> accounts = accountEventObject.getAccounts();
+        this.accounts = dataHandler.getAccounts();
+        recyclerView.setAdapter(new MyJurisdictionRecyclerViewAdapter(getContext(),accounts, mListener));
     }
 }

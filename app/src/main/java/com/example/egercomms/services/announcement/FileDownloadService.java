@@ -74,7 +74,6 @@ public class FileDownloadService extends IntentService {
                 @Override
                 public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                     if (response.isSuccessful()) {
-                        Log.d(TAG, "server contacted and has file");
 
                         boolean writtenToDisk = writeResponseBodyToDisk(response.body());
 
@@ -84,20 +83,16 @@ public class FileDownloadService extends IntentService {
                             message = "Error downloading file. Check if it exists";
                         }
 
-                        Log.d(TAG, "file download was a success? " + writtenToDisk);
 
-                        Log.e("MESSAGE", "onHandleIntent: " + message);
                         returnResults(message);
                     } else {
                         message = "Problem saving file";
-                        Log.d(TAG, "server contact failed");
                         returnResults(message);
                     }
                 }
 
                 @Override
                 public void onFailure(Call<ResponseBody> call, Throwable t) {
-                    Log.e(TAG, "error");
                     message = "File download failed";
                     returnResults(message);
                 }

@@ -19,18 +19,19 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.egercomms.data.DataHandler;
-import com.example.egercomms.eventObjects.JurisdictionEventObject;
-import com.example.egercomms.models.Announcement;
+import com.example.egercomms.eventObjects.AccountEventObject;
+import com.example.egercomms.models.Account;
 import com.example.egercomms.models.Jurisdiction;
 import com.example.egercomms.models.NavBarItem;
+import com.example.egercomms.models.Staff;
+import com.example.egercomms.models.User;
 import com.example.egercomms.services.announcement.AnnouncementService;
 import com.example.egercomms.services.jurisdiction.JurisdictionService;
+import com.example.egercomms.services.staff.StaffService;
 import com.example.egercomms.utils.NetworkHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -49,25 +50,54 @@ public class MainActivity extends AppCompatActivity
     public static final String SUEU_SEATS = "sueu_seats";
     public static final String RESIDENCE_HALLS = "residence_halls";
     public static final String TAG = "MyActivity";
+    public static final String NO_INTERNET = "no internet";
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private DataHandler dataHandler = DataHandler.getInstance();
     DrawerLayout drawer;
     private boolean permissionGranted;
+    public List<Account> handlerAccounts = new ArrayList<>();
+    private int count = 0;
+    private int jurisdictionsSize = 0;
 
-    private BroadcastReceiver jurisdictionServiceBroadcastReceiver = new BroadcastReceiver() {
+    private BroadcastReceiver staffServiceBroadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            ++count;
+            Account account = (Account) intent.getParcelableExtra(StaffService.MY_SERVICE_PAYLOAD);
+            handlerAccounts = dataHandler.getAccounts();
+            if (account != null) {
+                if (handlerAccounts != null) {
+                    if (!handlerAccounts.contains(account)) {
+                        handlerAccounts.add(account);
+                    }
+                } else {
+                    handlerAccounts = new ArrayList<>(Arrays.asList(account));
+                }
+                dataHandler.setAccounts(handlerAccounts);
+            } else {
+                Toast.makeText(context, "No jurisdictions yet", Toast.LENGTH_SHORT).show();
+            }
+            if (count == jurisdictionsSize) {
+                count = 0;
+                Toast.makeText(context, "Received " + jurisdictionsSize + " objects", Toast.LENGTH_SHORT).show();
+                AccountEventObject accountEventObject = new AccountEventObject(handlerAccounts);
+                EventBus.getDefault().post(accountEventObject);
+            }
+        }
+    };
+
+    private BroadcastReceiver jurisdictionsServiceBroadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
             Jurisdiction[] dataItems = (Jurisdiction[]) intent
                     .getParcelableArrayExtra(JurisdictionService.MY_SERVICE_PAYLOAD);
             if (dataItems != null) {
-                Toast.makeText(context,
-                        "Received " + dataItems.length + " items from service",
-                        Toast.LENGTH_SHORT).show();
-
+                jurisdictionsSize = dataItems.length;
                 List<Jurisdiction> jurisdictions = new ArrayList<>(Arrays.asList(dataItems));
                 dataHandler.setJurisdictions(jurisdictions);
-                JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(jurisdictions);
-                EventBus.getDefault().post(jurisdictionEventObject);
+                for (Jurisdiction jurisdiction : jurisdictions) {
+                    startAccountService(jurisdiction.getName());
+                }
             } else {
                 Toast.makeText(context, "No jurisdictions yet", Toast.LENGTH_SHORT).show();
             }
@@ -88,17 +118,18 @@ public class MainActivity extends AppCompatActivity
         toggle.syncState();
 
         boolean networkOk = NetworkHelper.hasNetworkAccess(this);
-        if (dataHandler.getJurisdictions() == null && networkOk) {
+        if (dataHandler.getAccounts() == null && networkOk) {
+            dataHandler.setItem("faculty-rep");
             startJurisdictionService(FACULTIES);
         } else if (!networkOk) {
-            dataHandler.setJurisdictions(new ArrayList<>(Arrays.asList(new Jurisdiction("please connect to the internet"))));
+            dataHandler.setAccounts(new ArrayList<>(Arrays.asList(new Account(new Jurisdiction("no internet"), new Staff(new User("", ""))))));
         } else {
-            JurisdictionEventObject jurisdictionEventObject = new JurisdictionEventObject(dataHandler.getJurisdictions());
-            EventBus.getDefault().post(jurisdictionEventObject);
+            AccountEventObject accountEventObject = new AccountEventObject(dataHandler.getAccounts());
+            EventBus.getDefault().post(accountEventObject);
         }
         setNavBarButtons();
 
-        if(!permissionGranted){
+        if (!permissionGranted) {
             dataHandler.setPermissionsGranted(checkPermissions());
         }
     }
@@ -107,7 +138,10 @@ public class MainActivity extends AppCompatActivity
     protected void onResume() {
         super.onResume();
         LocalBroadcastManager.getInstance(getApplicationContext())
-                .registerReceiver(jurisdictionServiceBroadcastReceiver,
+                .registerReceiver(staffServiceBroadcastReceiver,
+                        new IntentFilter(StaffService.MY_SERVICE_MESSAGE));
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .registerReceiver(jurisdictionsServiceBroadcastReceiver,
                         new IntentFilter(JurisdictionService.MY_SERVICE_MESSAGE));
     }
 
@@ -115,7 +149,9 @@ public class MainActivity extends AppCompatActivity
     protected void onPause() {
         super.onPause();
         LocalBroadcastManager.getInstance(getApplicationContext())
-                .unregisterReceiver(jurisdictionServiceBroadcastReceiver);
+                .unregisterReceiver(staffServiceBroadcastReceiver);
+        LocalBroadcastManager.getInstance(getApplicationContext())
+                .unregisterReceiver(jurisdictionsServiceBroadcastReceiver);
     }
 
     private void setNavBarButtons() {
@@ -135,32 +171,9 @@ public class MainActivity extends AppCompatActivity
         }
     }
 
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        // Inflate the menu; this adds items to the action bar if it is present.
-////        getMenuInflater().inflate(R.menu.main, menu);
-//        return true;
-//    }
-//
-//    @Override
-//    public boolean onOptionsItemSelected(MenuItem item) {
-//        // Handle action bar item clicks here. The action bar will
-//        // automatically handle clicks on the Home/Up button, so long
-//        // as you specify a parent activity in AndroidManifest.xml.
-//        int id = item.getItemId();
-//
-//        //noinspection SimplifiableIfStatement
-////        if (id == R.id.action_settings) {
-////            return true;
-////        }
-//
-//        return super.onOptionsItemSelected(item);
-//    }
-
     @Override
     public void onListFragmentInteraction(Jurisdiction item) {
-        Log.e(TAG, "onListFragmentInteraction:" + item);
-        if (NetworkHelper.hasNetworkAccess(this) && !item.getName().equalsIgnoreCase("please connect to the internet")) {
+        if (NetworkHelper.hasNetworkAccess(this) && !item.getName().equalsIgnoreCase(NO_INTERNET)) {
             Intent activityIntent = new Intent(this, AnnouncementActivity.class);
             startActivity(activityIntent);
             startAnnouncementService(item.getName());
@@ -174,6 +187,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         drawer.closeDrawer(GravityCompat.START);
+        handlerAccounts.clear();
         switch (NavBarItem.fromViewId(v.getId())) {
             case FACULTY_REPS:
                 dataHandler.setItem("faculty-rep");
@@ -213,7 +227,16 @@ public class MainActivity extends AppCompatActivity
             Intent intent = new Intent(this, AnnouncementService.class);
             intent.putExtra(NAME, name);
             startService(intent);
-            Log.e(TAG, "startAnnouncementService: " + name);
+        } else {
+            Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void startAccountService(String name) {
+        if (NetworkHelper.hasNetworkAccess(this)) {
+            Intent intent = new Intent(this, StaffService.class);
+            intent.putExtra(JURISDICTION, name);
+            startService(intent);
         } else {
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }
@@ -259,6 +282,17 @@ public class MainActivity extends AppCompatActivity
                     dataHandler.setPermissionsGranted(true);
                     Toast.makeText(this, "External storage permission granted",
                             Toast.LENGTH_SHORT).show();
+
+                    if (dataHandler.getAccounts() == null && NetworkHelper.hasNetworkAccess(this)) {
+                        dataHandler.setItem("faculty-rep");
+                        startJurisdictionService(FACULTIES);
+                    } else if (!NetworkHelper.hasNetworkAccess(this)) {
+                        dataHandler.setAccounts(new ArrayList<>(Arrays.asList(new Account(new Jurisdiction("no internet"), new Staff(new User("", ""))))));
+                    } else {
+                        AccountEventObject accountEventObject = new AccountEventObject(dataHandler.getAccounts());
+                        EventBus.getDefault().post(accountEventObject);
+                    }
+
                 } else {
                     Toast.makeText(this, "You must grant permission to download files", Toast.LENGTH_SHORT).show();
                 }

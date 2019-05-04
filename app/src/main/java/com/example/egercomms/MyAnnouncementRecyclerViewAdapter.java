@@ -15,9 +15,7 @@ import com.example.egercomms.data.DataHandler;
 import com.example.egercomms.dummy.DummyContent.DummyItem;
 import com.example.egercomms.eventObjects.AnnouncementEventObject;
 import com.example.egercomms.eventObjects.FilePathEventObject;
-import com.example.egercomms.eventObjects.JurisdictionEventObject;
 import com.example.egercomms.models.Announcement;
-import com.example.egercomms.models.Jurisdiction;
 import com.example.egercomms.utils.NetworkHelper;
 
 import org.greenrobot.eventbus.EventBus;
@@ -57,7 +55,6 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
                 }
             }
         }
-        Log.e("FILTER", "filter: " + announcements);
         AnnouncementEventObject announcementEventObject = new AnnouncementEventObject(announcements);
         EventBus.getDefault().post(announcementEventObject);
     }
