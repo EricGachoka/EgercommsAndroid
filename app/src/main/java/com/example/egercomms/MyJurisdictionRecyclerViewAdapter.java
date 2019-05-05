@@ -135,8 +135,6 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
             }
         }
         notifyDataSetChanged();
-//        AccountEventObject accountEventObject = new AccountEventObject(accounts);
-//        EventBus.getDefault().post(accountEventObject);
     }
 
     @Override

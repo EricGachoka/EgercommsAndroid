@@ -20,6 +20,7 @@ import com.example.egercomms.utils.NetworkHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -43,20 +44,19 @@ public class MyAnnouncementRecyclerViewAdapter extends RecyclerView.Adapter<MyAn
     }
 
     public void filter(String text) {
-        List<Announcement> jurisdictionsCopy = dataHandler.getAnnouncements();
+        List<Announcement> announcementsCopy = new ArrayList<>(dataHandler.getAnnouncements());
         announcements.clear();
-        if (text.isEmpty() && !announcements.isEmpty()) {
-            announcements.addAll(jurisdictionsCopy);
+        if (text.isEmpty()) {
+            announcements.addAll(announcementsCopy);
         } else {
             text = text.toLowerCase();
-            for (Announcement item : jurisdictionsCopy) {
+            for (Announcement item : announcementsCopy) {
                 if (item.getTitle().toLowerCase().contains(text) || item.getMessage().toLowerCase().contains(text)) {
                     announcements.add(item);
                 }
             }
         }
-        AnnouncementEventObject announcementEventObject = new AnnouncementEventObject(announcements);
-        EventBus.getDefault().post(announcementEventObject);
+        notifyDataSetChanged();
     }
 
     @Override

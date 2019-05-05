@@ -163,6 +163,7 @@ public class AnnouncementFragment extends Fragment{
         List<Announcement> announcements = announcementEventObject.getAnnouncements();
         this.announcements.clear();
         this.announcements.addAll(announcements);
+        dataHandler.setAnnouncements(new ArrayList<Announcement>(announcements));
         adapter.notifyDataSetChanged();
     }
 }
