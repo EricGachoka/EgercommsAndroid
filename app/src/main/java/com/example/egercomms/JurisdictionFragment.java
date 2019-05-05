@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -164,7 +165,8 @@ public class JurisdictionFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshAdapter(AccountEventObject accountEventObject){
         List<Account> accounts = accountEventObject.getAccounts();
-        this.accounts = dataHandler.getAccounts();
-        recyclerView.setAdapter(new MyJurisdictionRecyclerViewAdapter(getContext(),accounts, mListener));
+        this.accounts.clear();
+        this.accounts.addAll(accounts);
+        adapter.notifyDataSetChanged();
     }
 }

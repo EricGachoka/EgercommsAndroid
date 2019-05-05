@@ -49,8 +49,26 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
 
     public MyJurisdictionRecyclerViewAdapter(Context context, List<Account> items, OnListFragmentInteractionListener listener) {
         this.context = context;
-        accounts = items;
+        if (accounts != null) {
+            setItems(items);
+        } else {
+            accounts = items;
+        }
         mListener = listener;
+    }
+
+    public void setItems(List<Account> newAccounts) {
+        //get the current items
+        int currentSize = accounts.size();
+        //remove the current items
+        accounts.clear();
+        //add all the new items
+        accounts.addAll(newAccounts);
+        //tell the recycler view that all the old items are gone
+        notifyItemRangeRemoved(0, currentSize);
+        //tell the recycler view how many new items we added
+        notifyItemRangeInserted(0, newAccounts.size());
+//        notifyDataSetChanged();
     }
 
     @Override
@@ -68,11 +86,17 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
         holder.mItem = account.getJurisdiction();
         holder.jurisdictionName.setText(account.getJurisdiction().getName());
         holder.staffName.setText(user.getFullName());
-        if(url != null){
+        if (url != null) {
             Picasso.with(context)
-                    .load(BASE_URL+url)
+                    .load(BASE_URL + url)
                     .into(holder.staffImage);
         }
+//        String gender = account.getStaff().getGender();
+//        if (gender != null) {
+//            if(gender.equals("F") && url==null){
+//                holder.staffImage.setBackgroundResource(R.mipmap.woman_icon);
+//            }
+//        }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

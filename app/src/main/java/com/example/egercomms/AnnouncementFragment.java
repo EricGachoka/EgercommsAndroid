@@ -161,7 +161,8 @@ public class AnnouncementFragment extends Fragment{
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshAnnouncementsAdapter(AnnouncementEventObject announcementEventObject) {
         List<Announcement> announcements = announcementEventObject.getAnnouncements();
-        this.announcements = announcements;
-        recyclerView.setAdapter(new MyAnnouncementRecyclerViewAdapter(getContext(), announcements, mListener));
+        this.announcements.clear();
+        this.announcements.addAll(announcements);
+        adapter.notifyDataSetChanged();
     }
 }
