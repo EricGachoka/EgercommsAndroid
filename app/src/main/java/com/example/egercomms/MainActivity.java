@@ -58,6 +58,7 @@ public class MainActivity extends AppCompatActivity
     public List<Account> handlerAccounts = new ArrayList<>();
     private int count = 0;
     private int jurisdictionsSize = 0;
+    private Account noInternetAccount = new Account(new Jurisdiction("no internet"), new Staff(new User("", "")));
 
     private BroadcastReceiver staffServiceBroadcastReceiver = new BroadcastReceiver() {
         @Override
@@ -67,6 +68,9 @@ public class MainActivity extends AppCompatActivity
             handlerAccounts = dataHandler.getAccounts();
             if (account != null) {
                 if (handlerAccounts != null) {
+                    if(handlerAccounts.contains(noInternetAccount)){
+                        handlerAccounts.remove(noInternetAccount);
+                    }
                     if (!handlerAccounts.contains(account)) {
                         handlerAccounts.add(account);
                     }
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity
             dataHandler.setItem("faculty-rep");
             startJurisdictionService(FACULTIES);
         } else if (!networkOk) {
-            dataHandler.setAccounts(new ArrayList<>(Arrays.asList(new Account(new Jurisdiction("no internet"), new Staff(new User("", ""))))));
+            dataHandler.setAccounts(new ArrayList<>(Arrays.asList(noInternetAccount)));
         } else {
             AccountEventObject accountEventObject = new AccountEventObject(dataHandler.getAccounts());
             EventBus.getDefault().post(accountEventObject);

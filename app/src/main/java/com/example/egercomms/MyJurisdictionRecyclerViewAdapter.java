@@ -46,6 +46,8 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
     private Staff mStaff = new Staff(new User("", ""));
     private Context context;
     private String BASE_URL = "https://gachokaeric.pythonanywhere.com";
+    private String DEFAULT_ICON_URL = BASE_URL + "/media/images/man-user-small.png";
+    private String FEMALE_ICON_URL = BASE_URL + "/media/images/woman_icon.png";
 
     public MyJurisdictionRecyclerViewAdapter(Context context, List<Account> items, OnListFragmentInteractionListener listener) {
         this.context = context;
@@ -86,17 +88,26 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
         holder.mItem = account.getJurisdiction();
         holder.jurisdictionName.setText(account.getJurisdiction().getName());
         holder.staffName.setText(user.getFullName());
+        String gender = account.getStaff().getGender();
         if (url != null) {
             Picasso.with(context)
                     .load(BASE_URL + url)
                     .into(holder.staffImage);
+        } else if (url==null && gender!=null){
+            if(gender.equalsIgnoreCase("F")){
+                Picasso.with(context)
+                        .load(FEMALE_ICON_URL)
+                        .fit()
+                        .centerCrop()
+                        .into(holder.staffImage);
+            }
+        }else{
+            Picasso.with(context)
+                    .load(R.mipmap.default_staff)
+                    .fit()
+                    .centerCrop()
+                    .into(holder.staffImage);
         }
-//        String gender = account.getStaff().getGender();
-//        if (gender != null) {
-//            if(gender.equals("F") && url==null){
-//                holder.staffImage.setBackgroundResource(R.mipmap.woman_icon);
-//            }
-//        }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
