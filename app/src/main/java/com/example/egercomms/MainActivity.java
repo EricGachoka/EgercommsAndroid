@@ -68,9 +68,7 @@ public class MainActivity extends AppCompatActivity
             handlerAccounts = dataHandler.getAccounts();
             if (account != null) {
                 if (handlerAccounts != null) {
-                    if(handlerAccounts.contains(noInternetAccount)){
-                        handlerAccounts.remove(noInternetAccount);
-                    }
+                    handlerAccounts.remove(noInternetAccount);
                     if (!handlerAccounts.contains(account)) {
                         handlerAccounts.add(account);
                     }
@@ -99,6 +97,7 @@ public class MainActivity extends AppCompatActivity
                 jurisdictionsSize = dataItems.length;
                 List<Jurisdiction> jurisdictions = new ArrayList<>(Arrays.asList(dataItems));
                 dataHandler.setJurisdictions(jurisdictions);
+                dataHandler.setAccounts(new ArrayList<Account>());
                 for (Jurisdiction jurisdiction : jurisdictions) {
                     startAccountService(jurisdiction.getName());
                 }

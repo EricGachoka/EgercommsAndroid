@@ -165,11 +165,9 @@ public class JurisdictionFragment extends Fragment {
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshAdapter(AccountEventObject accountEventObject){
         List<Account> accounts = accountEventObject.getAccounts();
-        Log.e(TAG, "refreshAdapter: "+accounts);
         this.accounts.clear();
         this.accounts.addAll(accounts);
-        dataHandler.getAccounts().clear();
-        dataHandler.getAccounts().addAll(accounts);
+        dataHandler.setAccounts(new ArrayList<Account>(accounts));
         adapter.notifyDataSetChanged();
     }
 }

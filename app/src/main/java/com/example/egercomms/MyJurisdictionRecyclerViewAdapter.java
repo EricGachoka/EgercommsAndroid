@@ -28,6 +28,7 @@ import com.squareup.picasso.Picasso;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -51,27 +52,27 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
 
     public MyJurisdictionRecyclerViewAdapter(Context context, List<Account> items, OnListFragmentInteractionListener listener) {
         this.context = context;
-        if (accounts != null) {
-            setItems(items);
-        } else {
-            accounts = items;
-        }
+//        if (accounts != null) {
+//            setItems(items);
+//        } else {
+//            accounts = items;
+//        }
+        accounts = items;
         mListener = listener;
     }
 
-    public void setItems(List<Account> newAccounts) {
-        //get the current items
-        int currentSize = accounts.size();
-        //remove the current items
-        accounts.clear();
-        //add all the new items
-        accounts.addAll(newAccounts);
-        //tell the recycler view that all the old items are gone
-        notifyItemRangeRemoved(0, currentSize);
-        //tell the recycler view how many new items we added
-        notifyItemRangeInserted(0, newAccounts.size());
-//        notifyDataSetChanged();
-    }
+//    public void setItems(List<Account> newAccounts) {
+//        //get the current items
+//        int currentSize = accounts.size();
+//        //remove the current items
+//        accounts.clear();
+//        //add all the new items
+//        accounts.addAll(newAccounts);
+//        //tell the recycler view that all the old items are gone
+//        notifyItemRangeRemoved(0, currentSize);
+//        //tell the recycler view how many new items we added
+//        notifyItemRangeInserted(0, newAccounts.size());
+//    }
 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -93,15 +94,15 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
             Picasso.with(context)
                     .load(BASE_URL + url)
                     .into(holder.staffImage);
-        } else if (url==null && gender!=null){
-            if(gender.equalsIgnoreCase("F")){
+        } else if (url == null && gender != null) {
+            if (gender.equalsIgnoreCase("F")) {
                 Picasso.with(context)
                         .load(FEMALE_ICON_URL)
                         .fit()
                         .centerCrop()
                         .into(holder.staffImage);
             }
-        }else{
+        } else {
             Picasso.with(context)
                     .load(R.mipmap.default_staff)
                     .fit()
@@ -121,9 +122,9 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
     }
 
     public void filter(String text) {
-        List<Account> accountsCopy = dataHandler.getAccounts();
+        List<Account> accountsCopy = new ArrayList<>(dataHandler.getAccounts());
         accounts.clear();
-        if (text.isEmpty() && !accounts.isEmpty()) {
+        if (text.isEmpty()) {
             accounts.addAll(accountsCopy);
         } else {
             text = text.toLowerCase();
@@ -133,8 +134,9 @@ public class MyJurisdictionRecyclerViewAdapter extends RecyclerView.Adapter<MyJu
                 }
             }
         }
-        AccountEventObject accountEventObject = new AccountEventObject(accounts);
-        EventBus.getDefault().post(accountEventObject);
+        notifyDataSetChanged();
+//        AccountEventObject accountEventObject = new AccountEventObject(accounts);
+//        EventBus.getDefault().post(accountEventObject);
     }
 
     @Override
