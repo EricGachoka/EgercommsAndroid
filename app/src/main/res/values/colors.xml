@@ -5,4 +5,5 @@
     <color name="colorAccent">#D81B60</color>
     <color name="divider_color">#000000</color>
     <color name="background_color">#E8EEFA</color>
+    <color name="attachments">#0000ff</color>
 </resources>

@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.annotation.NonNull;
@@ -36,6 +37,7 @@ import com.example.egercomms.utils.NetworkHelper;
 
 import org.greenrobot.eventbus.EventBus;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity
     public static final String RESIDENCE_HALLS = "residence_halls";
     public static final String TAG = "MyActivity";
     public static final String NO_INTERNET = "no internet";
+    public static final String FOLDER_PATH = File.separator + "Egercomms" + File.separator + "downloads";
     private static final int REQUEST_PERMISSION_WRITE = 1001;
     private DataHandler dataHandler = DataHandler.getInstance();
     DrawerLayout drawer;
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity
     public List<Account> handlerAccounts = new ArrayList<>();
     private int count = 0;
     private int jurisdictionsSize = 0;
+    public static boolean fetch = true;
     private Account noInternetAccount = new Account(new Jurisdiction("no internet"), new Staff(new User("", "")));
 
     private BroadcastReceiver staffServiceBroadcastReceiver = new BroadcastReceiver() {
@@ -81,8 +85,9 @@ public class MainActivity extends AppCompatActivity
             }
             if (count == jurisdictionsSize) {
                 count = 0;
-                Toast.makeText(context, "Received " + jurisdictionsSize + " objects", Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, "Received " + jurisdictionsSize + " jurisdictions", Toast.LENGTH_SHORT).show();
                 AccountEventObject accountEventObject = new AccountEventObject(handlerAccounts);
+                Log.e(TAG, "onReceive: " + accountEventObject.getAccounts());
                 EventBus.getDefault().post(accountEventObject);
             }
         }
@@ -93,11 +98,13 @@ public class MainActivity extends AppCompatActivity
         public void onReceive(Context context, Intent intent) {
             Jurisdiction[] dataItems = (Jurisdiction[]) intent
                     .getParcelableArrayExtra(JurisdictionService.MY_SERVICE_PAYLOAD);
-            if (dataItems != null) {
+            if (dataItems != null && dataItems.length != 0) {
                 jurisdictionsSize = dataItems.length;
                 List<Jurisdiction> jurisdictions = new ArrayList<>(Arrays.asList(dataItems));
                 dataHandler.setJurisdictions(jurisdictions);
                 dataHandler.setAccounts(new ArrayList<Account>());
+                Toast.makeText(context, "fetching...", Toast.LENGTH_LONG).show();
+                Log.e(TAG, "onReceive: " + jurisdictions);
                 for (Jurisdiction jurisdiction : jurisdictions) {
                     startAccountService(jurisdiction.getName());
                 }
@@ -190,37 +197,94 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onClick(View v) {
         drawer.closeDrawer(GravityCompat.START);
-        handlerAccounts.clear();
+        if (fetch) {
+            handlerAccounts.clear();
+        }
         switch (NavBarItem.fromViewId(v.getId())) {
             case FACULTY_REPS:
-                dataHandler.setItem("faculty-rep");
-                startJurisdictionService(FACULTIES);
+                if (!dataHandler.getItem().equalsIgnoreCase("faculty-rep")) {
+                    if (fetch) {
+                        dataHandler.setItem("faculty-rep");
+                        fetch = false;
+                        startJurisdictionService(FACULTIES);
+                    } else {
+                        Toast.makeText(this, "still fetching previous list...", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case DEPARTMENT_REPS:
-                dataHandler.setItem("department-rep");
-                startJurisdictionService(DEPARTMENTS);
+                if (!dataHandler.getItem().equalsIgnoreCase("department-rep")) {
+                    if (fetch) {
+                        dataHandler.setItem("department-rep");
+                        fetch = false;
+                        startJurisdictionService(DEPARTMENTS);
+                    } else {
+                        Toast.makeText(this, "still fetching previous list...", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case SUEU_GOVERNORS:
-                dataHandler.setItem("sueu-leader");
-                startJurisdictionService(SUEU_SEATS);
+                if (!dataHandler.getItem().equalsIgnoreCase("sueu-leader")) {
+                    if (fetch) {
+                        dataHandler.setItem("sueu-leader");
+                        fetch = false;
+                        startJurisdictionService(SUEU_SEATS);
+                    } else {
+                        Toast.makeText(this, "still fetching previous list...", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case FACULTY_CONGRESS:
-                dataHandler.setItem("faculty-congress");
-                startJurisdictionService(FACULTIES);
+                if (!dataHandler.getItem().equalsIgnoreCase("faculty-congress")) {
+                    if (fetch) {
+                        dataHandler.setItem("faculty-congress");
+                        fetch = false;
+                        startJurisdictionService(FACULTIES);
+                    } else {
+                        Toast.makeText(this, "still fetching previous list...", Toast.LENGTH_SHORT).show();
+                    }
+                }
                 break;
             case RESIDENCE_CONGRESS:
-                dataHandler.setItem("residence-congress");
-                startJurisdictionService(RESIDENCE_HALLS);
+                if (!dataHandler.getItem().equalsIgnoreCase("residence-congress")) {
+                    if (fetch) {
+                        dataHandler.setItem("residence-congress");
+                        fetch = false;
+                        startJurisdictionService(RESIDENCE_HALLS);
+                    } else {
+                        Toast.makeText(this, "still fetching previous list...", Toast.LENGTH_SHORT).show();
+                    }
+                }
+                break;
+            case DOWNLOADS:
+                Uri selectedUri = Uri.parse(Environment.getExternalStorageDirectory() + FOLDER_PATH);
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setDataAndType(selectedUri, "resource/folder");
+
+                if (intent.resolveActivityInfo(getPackageManager(), 0) != null) {
+                    startActivity(intent);
+                } else {
+                    // if you reach this place, it means there is no any file
+                    // explorer app installed on your device
+                    Intent chooser = Intent.createChooser(intent, "Choose app to open folder");
+                    // Verify the intent will resolve to at least one activity
+                    if (intent.resolveActivity(getPackageManager()) != null) {
+                        startActivity(chooser);
+                    }
+                }
                 break;
         }
     }
 
     private void startJurisdictionService(String jurisdiction) {
         if (NetworkHelper.hasNetworkAccess(this)) {
+            fetch = false;
             Intent intent = new Intent(this, JurisdictionService.class);
             intent.putExtra(JURISDICTION, jurisdiction);
             startService(intent);
         } else {
+            fetch = true;
+            dataHandler.setItem("");
             Toast.makeText(this, "Network not available", Toast.LENGTH_SHORT).show();
         }
     }

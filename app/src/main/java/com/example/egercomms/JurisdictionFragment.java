@@ -169,5 +169,6 @@ public class JurisdictionFragment extends Fragment {
         this.accounts.addAll(accounts);
         dataHandler.setAccounts(new ArrayList<Account>(accounts));
         adapter.notifyDataSetChanged();
+        MainActivity.fetch = true;
     }
 }

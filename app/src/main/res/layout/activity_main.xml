@@ -80,6 +80,16 @@
                     android:layout_height="wrap_content"
                     android:drawableStart="@drawable/ic_person_black_24dp"
                     android:text="@string/residence_hall_congresses" />
+
+                <include layout="@layout/divider"/>
+
+                <TextView
+                    android:id="@+id/downloads"
+                    style="@style/nav_drawer_menu_item"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawableStart="@drawable/ic_file_download_black_24dp"
+                    android:text="@string/downloads" />
             </LinearLayout>
         </ScrollView>
     </android.support.design.widget.NavigationView>

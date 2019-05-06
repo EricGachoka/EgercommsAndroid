@@ -6,7 +6,8 @@ public enum NavBarItem {
     DEPARTMENT_REPS(R.id.department_reps),
     SUEU_GOVERNORS(R.id.sueu_governors),
     FACULTY_CONGRESS(R.id.faculty_congresses),
-    RESIDENCE_CONGRESS(R.id.residence_congresses);
+    RESIDENCE_CONGRESS(R.id.residence_congresses),
+    DOWNLOADS(R.id.downloads);
 
     private int itemId;
 

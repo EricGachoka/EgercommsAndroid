@@ -39,7 +39,8 @@
             android:textAppearance="?attr/textAppearanceListItem"
             android:textSize="15sp" />
 
-        <TextView
+        <TextView android:text="attachments"
+            android:textColor="@color/attachments"
             android:id="@+id/attachments"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
